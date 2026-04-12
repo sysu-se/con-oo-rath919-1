@@ -91,6 +91,46 @@ export class Sudoku {
 		console.log(out);
 	}
 	
+	getInvalidCells() {
+		const grid = this.getGrid();
+		const invalid = new Set();
+
+		for (let y = 0; y < 9; y++) {
+			for (let x = 0; x < 9; x++) {
+				const value = grid[y][x];
+				if (value === 0) continue;
+
+				for (let i = 0; i < 9; i++) {
+					if (i !== x && grid[y][i] === value) {
+						invalid.add(`${x},${y}`);
+						invalid.add(`${i},${y}`);
+					}
+				}
+
+				for (let i = 0; i < 9; i++) {
+					if (i !== y && grid[i][x] === value) {
+						invalid.add(`${x},${y}`);
+						invalid.add(`${x},${i}`);
+					}
+				}
+
+				const startRow = Math.floor(y / 3) * 3;
+				const startCol = Math.floor(x / 3) * 3;
+
+				for (let i = startRow; i < startRow + 3; i++) {
+					for (let j = startCol; j < startCol + 3; j++) {
+						if ((i !== y || j !== x) && grid[i][j] === value) {
+							invalid.add(`${x},${y}`);
+							invalid.add(`${j},${i}`);
+						}
+					}
+				}
+			}
+		}
+
+		return Array.from(invalid);
+	}
+	
 }
 
 export function createSudoku(inputGrid) {

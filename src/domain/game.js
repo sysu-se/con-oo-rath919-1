@@ -73,8 +73,6 @@ export class Game {
     this.#currentSudoku = new Sudoku(initialGrid || Array.from({ length: 9 }, () => Array(9).fill(0)));
 	this.#initialSudoku = new Sudoku(initialGrid || Array.from({ length: 9 }, () => Array(9).fill(0)));
   	}
-	
-	
 
     /** 序列化 */
     toJSON() {
@@ -99,6 +97,44 @@ export class Game {
 
         return game;
     }
+	
+	/** 判断数字是否符合数独规则 */
+	isConflict(x, y) {
+		const grid = this.#currentSudoku.getGrid();
+		const initialGrid = this.#initialSudoku.getGrid();
+
+		// 初始格子不能改，直接认为不冲突
+		if (initialGrid[y][x] !== 0) return false;
+
+		const value = grid[y][x];
+
+		if (value === 0) return false;
+
+		for (let i = 0; i < 9; i++) {
+			if (i !== x && grid[y][i] === value) {
+				return true;
+			}
+		}
+
+		for (let i = 0; i < 9; i++) {
+			if (i !== y && grid[i][x] === value) {
+				return true;
+			}
+		}
+
+		const startRow = Math.floor(y / 3) * 3;
+		const startCol = Math.floor(x / 3) * 3;
+
+		for (let i = startRow; i < startRow + 3; i++) {
+			for (let j = startCol; j < startCol + 3; j++) {
+				if ((i !== y || j !== x) && grid[i][j] === value) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
 }
 
 export function createGame({ sudoku }) {

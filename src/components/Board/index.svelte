@@ -49,7 +49,7 @@
 					      userNumber={initialGrid[y][x] === 0}
 					      sameArea={isSameArea($cursor, x, y)}
 						  sameNumber={getValueAtCursor($gameStore.grid, $cursor) !== 0 &&getValueAtCursor($gameStore.grid, $cursor) === value}
-					      conflictingNumber={$gameStore.invalidCells?.includes(x + ',' + y)} />
+					      conflictingNumber={initialGrid[y][x] === 0 && $gameStore.invalidCells?.includes(x + ',' + y)} />
 				{/each}
 			{/each}
 
